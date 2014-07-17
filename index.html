@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+	<head>
+		<title>uiCalendar DEMO</title>
+		<script type="text/javascript" src="uiCalendar.js"></script>
+		<link rel="stylesheet" href="uiCalendar.css" />
+		<style>
+			* {
+				margin: 0px;
+				padding: 0px;
+			}
+
+			body {
+				font-family: "Open Sans", Arial, sans-serif;
+				font-size: 12px;
+				background: #ffffff;
+				color: #333333;
+				padding: 30px;
+			}
+
+			.clear {
+				clear: both;
+			}
+
+			h1 {
+				font-weight: normal;
+				font-size: 38px;
+				margin-bottom: 30px;
+				color: #1f8cfa;
+			}
+
+			h1 span {
+				font-size: 31px;
+				color: #999999;
+			}
+
+			.case {
+				margin-bottom: 30px;
+				width: 622px;
+				float: left;
+				margin-right: 20px;
+			}
+
+			h2 {
+				font-size: 18px;
+				margin-bottom: 10px;
+			}
+
+			.sandbox {
+				width: 622px;
+				margin-bottom: 20px;
+			}
+
+			.code {
+				width: 600px;
+				background: #eeeeee;
+				border: 1px dashed #cccccc;
+				padding: 10px;
+				overflow-x: auto;
+			}
+
+			input {
+				padding: 6px 6px;
+				background: #ffffff;
+				border: 1px solid #cccccc;
+				box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.1);
+				border-radius: 3px;
+			}
+		</style>
+		<script type="text/javascript">
+			window.addEventListener("load", function(){
+
+				uiCalendar({
+					container: document.getElementById('dev-wrapper'),
+					inputFrom: document.getElementById('input-container-from'),
+					inputTo: document.getElementById('input-container-to'),
+					range: true,
+					monthCount: 3,
+					fillSpaces: false
+				});
+
+				uiCalendarAuto('.datepicker1', {})
+
+				uiCalendarAuto('.datepicker2', {
+					fromSelector: '.date-from',
+					toSelector: '.date-to',
+					range: true
+				})
+
+				uiCalendarAuto('.datepicker3', {
+					fromSelector: '.date-from',
+					toSelector: '.date-to',
+					range: true,
+					monthCount: 3,
+					startDate: '15. 7. 2014',
+					endDate: '7. 8. 2014',
+					fillSpaces: false,
+					format: '.', // '.' or '-'
+					closeOnSelect: true, //overrided when auto
+					closeOnBlur: true, //overrided when auto
+					allowPast: true,
+					allowFuture: true,
+					allowToday: false, //ignored when range
+					allowFrom: '5. 7. 2014',
+					allowTo: '5. 9. 2014',
+					dayLabels: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"],
+					monthLabels: ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"]
+				})
+
+			});
+		</script>
+	</head>
+	<body>
+		<h1>uiCalendar <span>/ minimalistic JS + HTML5 + CSS3 datepicker</span></h1>
+
+		<div class="case">
+			<h2>Container</h2>
+			<div class="sandbox">
+				<input type="hidden" id="input-container-from" />
+				<input type="hidden" id="input-container-to" />
+				<div id="dev-wrapper"></div>
+				<div class="clear"></div>
+			</div>
+			<pre class="code">
+uiCalendar({
+	container: document.getElementById('dev-wrapper'),
+	inputFrom: document.getElementById('input-container-from'),
+	inputTo: document.getElementById('input-container-to'),
+	range: true,
+	monthCount: 3,
+	fillSpaces: false
+});
+			</pre>
+		</div>
+
+		<div class="case">
+			<h2>Full-featured</h2>
+			<div class="sandbox">
+				<form class="datepicker3">
+					<input class="date-from" type="text" name="date3a" value="17. 7. 2014" />
+					<input class="date-to" type="text" name="date3b" value="19. 7. 2014" />
+				</form>
+			</div>
+			<pre class="code">
+uiCalendarAuto('.datepicker3', {
+	fromSelector: '.date-from',
+	toSelector: '.date-to',
+	range: true,
+	monthCount: 3,
+	startDate: '15. 7. 2014',
+	endDate: '7. 8. 2014',
+	fillSpaces: false,
+	format: '.', // '.' or '-'
+	closeOnSelect: true, //overrided when auto
+	closeOnBlur: true, //overrided when auto
+	allowPast: true,
+	allowFuture: true,
+	allowToday: false, //ignored when range
+	allowFrom: '5. 7. 2014',
+	allowTo: '5. 9. 2014',
+	dayLabels: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"],
+	monthLabels: ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"]
+})
+			</pre>
+		</div>
+
+		<div class="clear"></div>
+
+		<div class="case">
+			<h2>Single date input</h2>
+			<div class="sandbox">
+				<form>
+					<input class="datepicker1" type="text" name="date1" value="17. 7. 2014" />
+				</form>
+			</div>
+			<pre class="code">
+uiCalendarAuto('.datepicker1', {})
+			</pre>
+		</div>
+
+		<div class="case">
+			<h2>Multi date input</h2>
+			<div class="sandbox">
+				<form class="datepicker2">
+					<input class="date-from" type="text" name="date2a" value="17. 7. 2014" />
+					<input class="date-to" type="text" name="date2b" value="19. 7. 2014" />
+				</form>
+			</div>
+			<pre class="code">
+uiCalendarAuto('.datepicker2', {
+	fromSelector: '.date-from',
+	toSelector: '.date-to',
+	range: true
+})
+			</pre>
+		</div>
+
+	</body>
+</html>
