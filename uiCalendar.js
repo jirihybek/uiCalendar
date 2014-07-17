@@ -7,7 +7,7 @@
 var uiCalendar, uiCalendarAuto;
 
 uiCalendar = function(initialOptions) {
-  var alignmentEl, calBody, calHeader, calLabel, calNext, calPrev, calWrapper, close, closed, currentDate, endDate, formatDate, handleClick, handleHover, hoverDate, key, monthView, monthViews, normalizeDate, options, originX, originY, parseDate, position, rebuildViews, setValue, startDate, uiEl, update, val, viewDate;
+  var alignmentEl, calBody, calHeader, calLabel, calNext, calPrev, calWrapper, close, closed, currentDate, endDate, formatDate, getPosition, handleClick, handleHover, hoverDate, key, monthView, monthViews, normalizeDate, options, originPos, originX, originY, parseDate, position, rebuildViews, setValue, startDate, uiEl, update, val, viewDate;
   options = {};
   for (key in initialOptions) {
     val = initialOptions[key];
@@ -69,6 +69,20 @@ uiCalendar = function(initialOptions) {
       parent.appendChild(el);
     }
     return el;
+  };
+  getPosition = function(el, traverse) {
+    var left, top;
+    top = 0;
+    left = 0;
+    while (el) {
+      top += el.offsetTop || 0;
+      left += el.offsetLeft || 0;
+      el = traverse ? el.offsetParent : null;
+    }
+    return {
+      top: top,
+      left: left
+    };
   };
   update = function() {
     var stopDate, view, _i, _len, _results;
@@ -211,7 +225,7 @@ uiCalendar = function(initialOptions) {
     for (i = _j = 0, _ref = options.monthCount || 1; 0 <= _ref ? _j < _ref : _j > _ref; i = 0 <= _ref ? ++_j : --_j) {
       dt = new Date(initialDate.getTime());
       dt.setMonth(dt.getMonth() + i);
-      monthViews.push(monthView(calWrapper, dt));
+      monthViews.push(monthView(container, dt));
     }
     return update();
   };
@@ -246,6 +260,9 @@ uiCalendar = function(initialOptions) {
   }
   if (options.closeOnBlur === void 0) {
     options.closeOnBlur = false;
+  }
+  if (options.absolutePosition === void 0) {
+    options.absolutePosition = true;
   }
   if (options.range === void 0) {
     options.range = false;
@@ -331,16 +348,17 @@ uiCalendar = function(initialOptions) {
   rebuildViews(calBody, viewDate);
   if (options.popup) {
     alignmentEl = options.input || options.inputFrom;
-    originX = alignmentEl.offsetLeft + Math.round(alignmentEl.offsetWidth / 2);
-    originY = alignmentEl.offsetTop + Math.round(alignmentEl.offsetHeight / 2);
+    originPos = getPosition(alignmentEl, options.absolutePosition);
+    originX = originPos.left + Math.round(alignmentEl.offsetWidth / 2);
+    originY = originPos.top + Math.round(alignmentEl.offsetHeight / 2);
     position = 0;
     if (originY - calWrapper.offsetHeight < 0) {
       position = 1;
     }
-    if (position === 1 && originX + calWrapper.offsetWidth > document.body.clientWidth) {
+    if (position === 1 && originX + calWrapper.offsetWidth > options.container.offsetWidth) {
       position = 2;
     }
-    if (position === 2 && originY + calWrapper.offsetHeight > document.body.clientHeight) {
+    if (position === 2 && originY + calWrapper.offsetHeight > options.container.offsetHeight) {
       position = 3;
     }
     switch (position) {
@@ -397,7 +415,7 @@ uiCalendarAuto = function(selector, options) {
     }
     localOptions.closeOnSelect = true;
     localOptions.closeOnBlur = true;
-    localOptions.container = document.body;
+    localOptions.container = localOptions.parentContainer ? el.parentElement : document.body;
     localOptions.popup = true;
     if (options.range) {
       localOptions.inputFrom = el.querySelector(localOptions.fromSelector || ".start");

@@ -62,6 +62,21 @@ uiCalendar = (initialOptions) ->
 		parent.appendChild(el) if parent
 		return el
 
+	# Position function
+	getPosition = (el, traverse) ->
+		top = 0
+		left = 0
+
+		while el
+			top += el.offsetTop  || 0
+			left += el.offsetLeft || 0
+			el = if traverse then el.offsetParent else null
+
+		return {
+			top: top
+			left: left
+		}
+
 	# Updates calendar
 	update = () ->
 		stopDate = new Date(viewDate.getTime())
@@ -179,7 +194,7 @@ uiCalendar = (initialOptions) ->
 			dt = new Date(initialDate.getTime())
 			dt.setMonth( dt.getMonth() + i )
 
-			monthViews.push monthView(calWrapper, dt)
+			monthViews.push monthView(container, dt)
 
 		update()
 
@@ -199,6 +214,7 @@ uiCalendar = (initialOptions) ->
 
 	options.closeOnSelect = false 	if options.closeOnSelect is undefined
 	options.closeOnBlur   = false 	if options.closeOnBlur is undefined
+	options.absolutePosition = true if options.absolutePosition is undefined
 
 	options.range 		= false 	if options.range is undefined
 	options.fillSpaces 	= true 		if options.fillSpaces is undefined
@@ -266,16 +282,17 @@ uiCalendar = (initialOptions) ->
 	if options.popup
 		alignmentEl = options.input || options.inputFrom
 
-		originX = alignmentEl.offsetLeft + Math.round(alignmentEl.offsetWidth / 2)
-		originY = alignmentEl.offsetTop + Math.round(alignmentEl.offsetHeight / 2)
+		originPos = getPosition(alignmentEl, options.absolutePosition)
+		originX = originPos.left + Math.round(alignmentEl.offsetWidth / 2)
+		originY = originPos.top + Math.round(alignmentEl.offsetHeight / 2)
 
 		position = 0 # 0 = top, 1 = right, 2 = bottom, 3 = left
 
 		if originY - calWrapper.offsetHeight < 0
 			position = 1
-		if position is 1 and originX + calWrapper.offsetWidth > document.body.clientWidth
+		if position is 1 and originX + calWrapper.offsetWidth > options.container.offsetWidth
 			position = 2
-		if position is 2 and originY + calWrapper.offsetHeight > document.body.clientHeight
+		if position is 2 and originY + calWrapper.offsetHeight > options.container.offsetHeight
 			position = 3
 
 		switch position
@@ -315,7 +332,7 @@ uiCalendarAuto = (selector, options = {}) ->
 
 		localOptions.closeOnSelect = true
 		localOptions.closeOnBlur = true
-		localOptions.container = document.body
+		localOptions.container = if localOptions.parentContainer then el.parentElement else document.body
 		localOptions.popup = true
 
 		if options.range
