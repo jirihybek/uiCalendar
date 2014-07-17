@@ -433,7 +433,7 @@ uiCalendarAuto = function(selector, options) {
     }
     return _results;
   };
-  elements = document.querySelectorAll(selector);
+  elements = (options.parent || document).querySelectorAll(selector);
   _results = [];
   for (_i = 0, _len = elements.length; _i < _len; _i++) {
     el = elements[_i];

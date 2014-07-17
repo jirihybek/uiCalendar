@@ -343,5 +343,5 @@ uiCalendarAuto = (selector, options = {}) ->
 			subEl.classList.add('ui-calendar-input')
 			subEl.setAttribute('pattern', '^([0-9]{1,2}\.(\ )?[0-9]{1,2}\.(\ )?[0-9]{4}|[0-9]{4}-[0-9]{1,2}-[0-9]{1,2})$')
 
-	elements = document.querySelectorAll(selector)
+	elements = (options.parent || document).querySelectorAll(selector)
 	bindCalendar(el) for el in elements
