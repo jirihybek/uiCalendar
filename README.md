@@ -10,7 +10,7 @@ uiCalendar.css
 ```
 
 ## Preview
-[preview](https://raw.githubusercontent.com/jirihybek/uiCalendar/master/preview-mini.jpg "uiCalendar preview")
+![preview](https://raw.githubusercontent.com/jirihybek/uiCalendar/master/preview-mini.jpg "uiCalendar preview")
 
 ## License
 uiCalendar is published under GNU GPLv3 - see LICENSE.txt for more details.
