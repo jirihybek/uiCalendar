@@ -94,37 +94,37 @@ uiCalendar = function(initialOptions) {
     }
   };
   handleClick = function(colEl) {
-    if (!options.allowPast && colEl.time < currentDate.getTime()) {
+    if (!options.allowPast && parseInt(colEl.getAttribute('data-time')) < currentDate.getTime()) {
       return false;
     }
-    if (!options.allowToday && colEl.time === currentDate.getTime()) {
+    if (!options.allowToday && parseInt(colEl.getAttribute('data-time')) === currentDate.getTime()) {
       return false;
     }
-    if (!options.allowFuture && colEl.time > currentDate.getTime()) {
+    if (!options.allowFuture && parseInt(colEl.getAttribute('data-time')) > currentDate.getTime()) {
       return false;
     }
-    if (options.allowFrom && colEl.time < options.allowFrom.getTime()) {
+    if (options.allowFrom && parseInt(colEl.getAttribute('data-time')) < options.allowFrom.getTime()) {
       return false;
     }
-    if (options.allowTo && colEl.time > options.allowTo.getTime()) {
+    if (options.allowTo && parseInt(colEl.getAttribute('data-time')) > options.allowTo.getTime()) {
       return false;
     }
     if (options.range) {
       if (startDate === null || (startDate !== null && endDate !== null)) {
-        startDate = new Date(colEl.time);
+        startDate = new Date(parseInt(colEl.getAttribute('data-time')));
         return endDate = null;
-      } else if (colEl.time > startDate.getTime()) {
-        endDate = new Date(colEl.time);
+      } else if (parseInt(colEl.getAttribute('data-time')) > startDate.getTime()) {
+        endDate = new Date(parseInt(colEl.getAttribute('data-time')));
         return setValue();
       }
     } else {
-      startDate = new Date(colEl.time);
-      endDate = new Date(colEl.time);
+      startDate = new Date(parseInt(colEl.getAttribute('data-time')));
+      endDate = new Date(parseInt(colEl.getAttribute('data-time')));
       return setValue();
     }
   };
   handleHover = function(colEl) {
-    return hoverDate = new Date(colEl.time);
+    return hoverDate = new Date(parseInt(colEl.getAttribute('data-time')));
   };
   monthView = function(container, refDate) {
     var bodyEl, c, colEl, columnList, headEl, headTr, initialMonth, rowEl, view, viewEl, _i;
@@ -146,13 +146,13 @@ uiCalendar = function(initialOptions) {
       }
       if (refDate.getMonth() === initialMonth || options.fillSpaces) {
         colEl = uiEl('td', {}, refDate.getDate(), rowEl);
-        colEl.time = refDate.getTime();
+        colEl.setAttribute('data-time', refDate.getTime());
         colEl.addEventListener("click", function(ev) {
-          handleClick(ev.toElement);
+          handleClick(ev.toElement || ev.target);
           return update();
         });
         colEl.addEventListener("mouseover", function(ev) {
-          handleHover(ev.toElement);
+          handleHover(ev.toElement || ev.target);
           return update();
         });
         columnList.push(colEl);
@@ -160,7 +160,7 @@ uiCalendar = function(initialOptions) {
         colEl = uiEl('td', {
           "class": 'fill'
         }, '&nbsp;', rowEl);
-        colEl.time = -1;
+        colEl.setAttribute('data-time', -1);
       }
       refDate.setDate(refDate.getDate() + 1);
       if (refDate.getDay() === options.weekStart) {
@@ -174,22 +174,22 @@ uiCalendar = function(initialOptions) {
         for (_j = 0, _len = columnList.length; _j < _len; _j++) {
           colEl = columnList[_j];
           classes = [];
-          if (colEl.time < currentDate.getTime()) {
+          if (parseInt(colEl.getAttribute('data-time')) < currentDate.getTime()) {
             classes.push("past");
           }
-          if (colEl.time === currentDate.getTime()) {
+          if (parseInt(colEl.getAttribute('data-time')) === currentDate.getTime()) {
             classes.push("today");
           }
-          if (colEl.time > currentDate.getTime()) {
+          if (parseInt(colEl.getAttribute('data-time')) > currentDate.getTime()) {
             classes.push("future");
           }
-          if ((!options.allowToday && colEl.time === currentDate.getTime()) || (!options.allowPast && colEl.time < currentDate.getTime()) || (!options.allowFuture && colEl.time > currentDate.getTime()) || (options.allowFrom && colEl.time < options.allowFrom.getTime()) || (options.allowTo && colEl.time > options.allowTo.getTime())) {
+          if ((!options.allowToday && parseInt(colEl.getAttribute('data-time')) === currentDate.getTime()) || (!options.allowPast && parseInt(colEl.getAttribute('data-time')) < currentDate.getTime()) || (!options.allowFuture && parseInt(colEl.getAttribute('data-time')) > currentDate.getTime()) || (options.allowFrom && parseInt(colEl.getAttribute('data-time')) < options.allowFrom.getTime()) || (options.allowTo && parseInt(colEl.getAttribute('data-time')) > options.allowTo.getTime())) {
             classes.push("disabled");
           }
-          if ((startDate && colEl.time === startDate.getTime()) || (startDate && endDate && colEl.time >= startDate.getTime() && colEl.time <= endDate.getTime())) {
+          if ((startDate && parseInt(colEl.getAttribute('data-time')) === startDate.getTime()) || (startDate && endDate && parseInt(colEl.getAttribute('data-time')) >= startDate.getTime() && parseInt(colEl.getAttribute('data-time')) <= endDate.getTime())) {
             classes.push("selected");
           }
-          if (startDate && !endDate && hoverDate && colEl.time > startDate.getTime() && colEl.time < hoverDate.getTime()) {
+          if (startDate && !endDate && hoverDate && parseInt(colEl.getAttribute('data-time')) > startDate.getTime() && parseInt(colEl.getAttribute('data-time')) < hoverDate.getTime()) {
             classes.push("selection");
           }
           _results.push(colEl.setAttribute('class', classes.join(" ")));

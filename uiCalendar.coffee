@@ -83,27 +83,27 @@ uiCalendar = (initialOptions) ->
 
 	# Click handler
 	handleClick = (colEl) ->
-		return false if !options.allowPast and colEl.time < currentDate.getTime()
-		return false if !options.allowToday and colEl.time is currentDate.getTime()
-		return false if !options.allowFuture and colEl.time > currentDate.getTime()
-		return false if options.allowFrom and colEl.time < options.allowFrom.getTime()
-		return false if options.allowTo and colEl.time > options.allowTo.getTime()
+		return false if !options.allowPast and parseInt(colEl.getAttribute('data-time')) < currentDate.getTime()
+		return false if !options.allowToday and parseInt(colEl.getAttribute('data-time')) is currentDate.getTime()
+		return false if !options.allowFuture and parseInt(colEl.getAttribute('data-time')) > currentDate.getTime()
+		return false if options.allowFrom and parseInt(colEl.getAttribute('data-time')) < options.allowFrom.getTime()
+		return false if options.allowTo and parseInt(colEl.getAttribute('data-time')) > options.allowTo.getTime()
 
 		if options.range
 			if startDate is null or (startDate isnt null and endDate isnt null)
-				startDate = new Date(colEl.time)
+				startDate = new Date(parseInt(colEl.getAttribute('data-time')))
 				endDate = null
-			else if colEl.time > startDate.getTime()
-				endDate = new Date(colEl.time)
+			else if parseInt(colEl.getAttribute('data-time')) > startDate.getTime()
+				endDate = new Date(parseInt(colEl.getAttribute('data-time')))
 				setValue()
 
 		else
-			startDate = new Date(colEl.time)
-			endDate = new Date(colEl.time)
+			startDate = new Date(parseInt(colEl.getAttribute('data-time')))
+			endDate = new Date(parseInt(colEl.getAttribute('data-time')))
 			setValue()
 
 	handleHover = (colEl) ->
-		hoverDate = new Date(colEl.time)
+		hoverDate = new Date(parseInt(colEl.getAttribute('data-time')))
 
 	#Single month view
 	monthView = (container, refDate) ->
@@ -131,15 +131,15 @@ uiCalendar = (initialOptions) ->
 			# Column
 			if refDate.getMonth() is initialMonth || options.fillSpaces
 				colEl = uiEl('td', {}, refDate.getDate(), rowEl)
-				colEl.time = refDate.getTime()
+				colEl.setAttribute('data-time', refDate.getTime())
 
 				# Bind events
 				colEl.addEventListener "click", (ev) ->
-					handleClick(ev.toElement)
+					handleClick(ev.toElement || ev.target)
 					update()
 
 				colEl.addEventListener "mouseover", (ev) ->
-					handleHover(ev.toElement)
+					handleHover(ev.toElement || ev.target)
 					update()
 
 				columnList.push(colEl)
@@ -147,7 +147,7 @@ uiCalendar = (initialOptions) ->
 			# Fill
 			else
 				colEl = uiEl('td', { class: 'fill' }, '&nbsp;', rowEl)
-				colEl.time = -1;
+				colEl.setAttribute('data-time', -1)
 
 			# Move forward
 			refDate.setDate( refDate.getDate() + 1 )
@@ -160,12 +160,12 @@ uiCalendar = (initialOptions) ->
 			update: () ->
 				for colEl in columnList
 					classes = []
-					classes.push("past")  if colEl.time < currentDate.getTime()
-					classes.push("today")  if colEl.time is currentDate.getTime()
-					classes.push("future")  if colEl.time > currentDate.getTime()
-					classes.push("disabled") if (!options.allowToday and colEl.time is currentDate.getTime()) or (!options.allowPast and colEl.time < currentDate.getTime()) or (!options.allowFuture and colEl.time > currentDate.getTime()) or (options.allowFrom and colEl.time < options.allowFrom.getTime()) or (options.allowTo and colEl.time > options.allowTo.getTime())
-					classes.push("selected") if (startDate and colEl.time is startDate.getTime()) or (startDate and endDate and colEl.time >= startDate.getTime() and colEl.time <= endDate.getTime())
-					classes.push("selection") if startDate and !endDate and hoverDate and colEl.time > startDate.getTime() and colEl.time < hoverDate.getTime()
+					classes.push("past")  if parseInt(colEl.getAttribute('data-time')) < currentDate.getTime()
+					classes.push("today")  if parseInt(colEl.getAttribute('data-time')) is currentDate.getTime()
+					classes.push("future")  if parseInt(colEl.getAttribute('data-time')) > currentDate.getTime()
+					classes.push("disabled") if (!options.allowToday and parseInt(colEl.getAttribute('data-time')) is currentDate.getTime()) or (!options.allowPast and parseInt(colEl.getAttribute('data-time')) < currentDate.getTime()) or (!options.allowFuture and parseInt(colEl.getAttribute('data-time')) > currentDate.getTime()) or (options.allowFrom and parseInt(colEl.getAttribute('data-time')) < options.allowFrom.getTime()) or (options.allowTo and parseInt(colEl.getAttribute('data-time')) > options.allowTo.getTime())
+					classes.push("selected") if (startDate and parseInt(colEl.getAttribute('data-time')) is startDate.getTime()) or (startDate and endDate and parseInt(colEl.getAttribute('data-time')) >= startDate.getTime() and parseInt(colEl.getAttribute('data-time')) <= endDate.getTime())
+					classes.push("selection") if startDate and !endDate and hoverDate and parseInt(colEl.getAttribute('data-time')) > startDate.getTime() and parseInt(colEl.getAttribute('data-time')) < hoverDate.getTime()
 
 					colEl.setAttribute('class', classes.join(" "))
 
