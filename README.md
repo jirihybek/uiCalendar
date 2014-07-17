@@ -9,5 +9,8 @@ uiCalendar.min.js
 uiCalendar.css
 ```
 
+## Preview
+![preview](https://raw.githubusercontent.com/jirihybek/uiCalendar/master/preview.jpg =720 "uiCalendar preview")
+
 ## License
 uiCalendar is published under GNU GPLv3 - see LICENSE.txt for more details.
